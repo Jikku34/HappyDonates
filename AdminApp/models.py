@@ -1,31 +1,36 @@
 from django.db import models
 
 
-# Create your models here.
-
-
-class AdminDataModel(models.Model):
-    admin_id = models.CharField(max_length=100, primary_key=True)
-    admin_username = models.CharField(max_length=100)
-    admin_password = models.CharField(max_length=100)
-    admin_phone_number = models.CharField(max_length=100)
-    admin_email = models.CharField(max_length=100)
-
-    class Meta:
-        db_table = "admin_data_table"
-
-
 class MainCategoryModel(models.Model):
+    """
+    Model representing main categories.
+
+    Attributes:
+        main_category_id (IntegerField): The primary key for the main category.
+        main_category_name (CharField): The name of the main category.
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+    """
     main_category_id = models.IntegerField(primary_key=True)
     main_category_name = models.CharField(max_length=100)
-
-
 
     class Meta:
         db_table = "main_category_table"
 
 
 class SubCategoryModel(models.Model):
+    """
+    Model representing subcategories.
+
+    Attributes:
+        sub_category_id (AutoField): The primary key for the subcategory.
+        sub_category_name (CharField): The name of the subcategory.
+        main_category_id (ForeignKey): The main category to which the subcategory belongs.
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+    """
     sub_category_id = models.AutoField(primary_key=True)
     sub_category_name = models.CharField(max_length=100)
     main_category_id = models.ForeignKey(
@@ -36,6 +41,16 @@ class SubCategoryModel(models.Model):
 
 
 class DonationCategoryModel(models.Model):
+    """
+    Model representing donation categories.
+
+    Attributes:
+        donation_category_id (IntegerField): The primary key for the donation category.
+        donation_category_name (CharField): The name of the donation category.
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+    """
     donation_category_id = models.IntegerField(primary_key=True)
     donation_category_name = models.CharField(max_length=100)
 
@@ -44,6 +59,16 @@ class DonationCategoryModel(models.Model):
 
 
 class StateModel(models.Model):
+    """
+    Model representing states.
+
+    Attributes:
+        state_id (IntegerField): The primary key for the state.
+        state_name (CharField): The name of the state.
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+    """
     state_id = models.IntegerField(primary_key=True)
     state_name = models.CharField(max_length=100)
 
@@ -52,6 +77,17 @@ class StateModel(models.Model):
 
 
 class DistrictsModel(models.Model):
+    """
+    Model representing districts.
+
+    Attributes:
+        district_id (IntegerField): The primary key for the district.
+        district_name (CharField): The name of the district.
+        state_id (ForeignKey): The state to which the district belongs.
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+    """
     district_id = models.IntegerField(primary_key=True)
     district_name = models.CharField(max_length=100)
     state_id = models.ForeignKey(StateModel, on_delete=models.CASCADE)

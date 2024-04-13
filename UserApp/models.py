@@ -1,66 +1,112 @@
-from AdminApp.models import *
+from django.contrib.auth.models import User
 from django.db import models
-
-
-# Create your models here.
-class UserDataModel(models.Model):
-    user_id = models.CharField(max_length=100, primary_key=True)
-    username = models.CharField(max_length=200)
-    user_password = models.CharField(max_length=200)
-    user_phone_number = models.CharField(max_length=100)
-    create_at = models.DateField(auto_created=True)
-    user_status =  models.CharField(max_length=100,default="Active")
-
-    class Meta:
-        db_table = "user_data_table"
+from AdminApp.models import SubCategoryModel, DonationCategoryModel, DistrictsModel
 
 
 class UserPostModel(models.Model):
-    post_id = models.IntegerField(primary_key=True)
-    user_id = models.ForeignKey(UserDataModel, on_delete=models.CASCADE)
-    post_title = models.CharField(max_length=250)
-    post_description = models.TextField()
-    post_quantity = models.IntegerField()
-    post_sub_category = models.ForeignKey(SubCategoryModel,on_delete=models.CASCADE)
-    post_pick_up_time = models.DateField()
-    post_end_on = models.DateTimeField(null=True)
-    post_location = models.ForeignKey(DistrictsModel, on_delete=models.CASCADE)
-    post_address = models.TextField()
-    post_images = models.ImageField(upload_to='images/', null=True)
-    user_contact_number = models.CharField(max_length=100)
-    post_comments = models.CharField(max_length=300, null=True)
-    post_create_at = models.DateTimeField(auto_created=True)
-    post_status =  models.CharField(max_length=100,default="Active")
+    """
+    Model representing posts made by users.
+
+    Attributes:
+        post_id (AutoField): The primary key for the post.
+        user (ForeignKey): The user who made the post.
+        title (CharField): The title of the post.
+        description (TextField): The description of the post.
+        quantity (IntegerField): The quantity of items in the post.
+        sub_category (ForeignKey): The subcategory of the post.
+        pick_up_time (DateTimeField): The pick-up time for the post.
+        end_on (DateTimeField): The end time for the post (nullable).
+        location (ForeignKey): The location of the post.
+        address (TextField): The address of the post.
+        images (ImageField): The image(s) associated with the post.
+        contact_number (CharField): The contact number for the post.
+        comments (TextField): Any additional comments on the post (nullable).
+        create_at (DateTimeField): The creation time of the post.
+        status (CharField): The status of the post.
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+    """
+    post_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', null=True)
+    title = models.CharField(max_length=250, null=True)
+    description = models.TextField(null=True)
+    quantity = models.IntegerField(default=1)
+    sub_category = models.ForeignKey(SubCategoryModel, on_delete=models.CASCADE, related_name='posts', null=True)
+    pick_up_time = models.DateTimeField(null=True)
+    end_on = models.DateTimeField(null=True, )
+    location = models.ForeignKey(DistrictsModel, on_delete=models.CASCADE, related_name='posts', null=True)
+    address = models.TextField(null=True)
+    images = models.ImageField(upload_to='images/', null=True)
+    contact_number = models.CharField(max_length=100, null=True)
+    comments = models.TextField(max_length=300, null=True)
+    create_at = models.DateTimeField(auto_now_add=True, null=True)
+    status = models.CharField(max_length=100, default="Active")
 
     class Meta:
         db_table = 'user_post_table'
 
 
 class UserDonationModel(models.Model):
-    donation_id = models.IntegerField(primary_key=True)
-    user_id = models.ForeignKey(UserDataModel, on_delete=models.CASCADE)
-    donation_title = models.CharField(max_length=400)
-    donation_description = models.TextField()
-    donation_category = models.ForeignKey(
-        DonationCategoryModel, on_delete=models.CASCADE)
-    donation_end_date = models.DateTimeField()
-    donation_location = models.ForeignKey(
-        DistrictsModel, on_delete=models.CASCADE)
-    donation_address = models.CharField(max_length=500)
-    donation_images = models.ImageField(upload_to='images/', null=True)
-    user_contact_number = models.CharField(max_length=100)
-    donation_comments = models.CharField(max_length=500)
-    donation_create_at = models.DateTimeField(auto_created=True)
-    donation_status = models.CharField(max_length=100,default="Pending")
+    """
+    Model representing donation requests made by users.
+
+    Attributes:
+        donation_id (AutoField): The primary key for the donation request.
+        user (ForeignKey): The user who made the donation request.
+        title (CharField): The title of the donation request.
+        description (TextField): The description of the donation request.
+        category (ForeignKey): The category of the donation request.
+        end_date (DateTimeField): The end date for the donation request.
+        location (ForeignKey): The location of the donation request.
+        address (CharField): The address of the donation request.
+        images (ImageField): The image(s) associated with the donation request.
+        contact_number (CharField): The contact number for the donation request.
+        comments (TextField): Any additional comments on the donation request.
+        create_at (DateTimeField): The creation time of the donation request.
+        status (CharField): The status of the donation request.
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+    """
+    donation_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='donations', null=True)
+    title = models.CharField(max_length=400, null=True)
+    description = models.TextField(null=True)
+    category = models.ForeignKey(DonationCategoryModel, on_delete=models.CASCADE, related_name='donations', null=True)
+    end_date = models.DateTimeField(null=True)
+    location = models.ForeignKey(DistrictsModel, on_delete=models.CASCADE, related_name='donations', null=True)
+    address = models.CharField(max_length=500, null=True)
+    images = models.ImageField(upload_to='images/', null=True)
+    contact_number = models.CharField(max_length=100, null=True)
+    comments = models.TextField(max_length=500, null=True)
+    create_at = models.DateTimeField(auto_now_add=True, null=True)
+    status = models.CharField(max_length=100, default="Pending")
 
     class Meta:
         db_table = 'user_donation_table'
 
 
-class UserImageModel(models.Model):
-    user_image_id = models.IntegerField(primary_key=True)
-    user_image = models.ImageField()
-    user_id = models.ForeignKey(UserDataModel, on_delete=models.CASCADE)
+class UserProfileModel(models.Model):
+    """
+    Model representing images uploaded by users.
+
+    Attributes:
+        user_image_id (AutoField): The primary key for the user image.
+        user_image (ImageField): The image uploaded by the user.
+        user_phone (CharField): The phone number of the user.
+        user (OneToOneField): The user who uploaded the image.
+
+    Meta:
+        db_table (str): The name of the database table for the model.
+    """
+    user_profile_id = models.AutoField(primary_key=True)
+    profile_image = models.ImageField(null=True)
+    phone = models.CharField(max_length=200, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='image')
 
     class Meta:
-        db_table = "user_image_table"
+        db_table = "user_profile_table"
+
+
+

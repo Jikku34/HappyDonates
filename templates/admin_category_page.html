@@ -148,7 +148,7 @@
 
                 <a href="#" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold"><span class="material-icons me-2">
                     logout
-                    </span></i>Logout</a>
+                    </span>Logout</a>
             </div>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -244,7 +244,7 @@
                         <button class="btn btn-primary m-1" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">All category   </button>
                         <a href="{% url 'admin_add_category' %}" class="btn btn-primary m-1">Add new Category</a>
                       </p>
-                      <xdiv class="row">
+                      <div class="row">
                         <div class="col">
                           <div class="collapse multi-collapse" id="multiCollapseExample1">
                             <div class="card card-body">
@@ -275,7 +275,37 @@
                             </div>
                           </div>
                         </div>
-                      </x`div>
+                          <div class="col">
+                          <div class="collapse multi-collapse" id="multiCollapseExample2">
+                            <div class="card card-body">
+                                <table class="table bg-white rounded shadow-sm  table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" width="50">#</th>
+                                            <th scope="col">Category name</th>
+                                            <th scope="col">Total No post</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for data in subCategoryNonFood %}
+
+                                        <tr>
+
+                                            <th scope="row">{{forloop.counter}}</th>
+                                            <td>{{data.sub_category_name}}</td>
+                                            <td>{{data.post_count}}</td>
+                                            <td><a class="btn btn-danger btn-sm" href="/admin_remove_subcategory/{{data.sub_category_id}}" role="button">Remove</a></td>
+                                        </tr>
+
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                          </div>
+                        </div>
+                      <div>
 
 
 
