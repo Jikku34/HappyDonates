@@ -5,8 +5,7 @@ from rest_framework.response import Response
 from .models import UserPostModel, UserDonationModel, UserProfileModel
 from django.contrib.auth.models import User
 from AdminApp.models import DistrictsModel, Poster
-from .serializers import UserPostSerializer, UserDonationSerializer, UserProfileSerializer, PosterSerializer, \
-    DistrictSerializer
+from .serializers import UserPostSerializer, UserDonationSerializer, UserProfileSerializer, PosterSerializer,DistrictSerializer
 
 
 @api_view(['POST', 'PUT'])
