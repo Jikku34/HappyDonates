@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'UserApp',
     'storages',
     'rest_framework',
+    'rest_framework_simplejwt'
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,15 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
+# AUTH_USER_MODEL = 'UserApp.CustomUser'
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'HappyDonates.urls'
 
 TEMPLATES = [
@@ -148,5 +157,5 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'https://happydonates.com/',
-    # Add any other trusted origins as needed
+
 ]

@@ -108,5 +108,3 @@ class UserProfileModel(models.Model):
     class Meta:
         db_table = "user_profile_table"
 
-
-

@@ -94,3 +94,13 @@ class DistrictsModel(models.Model):
 
     class Meta:
         db_table = "districts_data_table"
+
+
+class Poster(models.Model):
+    title = models.CharField(max_length=200)
+    status = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='posters/')
+    date_posted = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

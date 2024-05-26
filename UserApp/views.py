@@ -2,13 +2,15 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import UserPostModel, UserDonationModel,UserProfileModel
+from .models import UserPostModel, UserDonationModel, UserProfileModel
 from django.contrib.auth.models import User
-from .serializers import UserPostSerializer, UserDonationSerializer,UserProfileSerializer
+from AdminApp.models import DistrictsModel, Poster
+from .serializers import UserPostSerializer, UserDonationSerializer, UserProfileSerializer, PosterSerializer, \
+    DistrictSerializer
 
 
-@api_view(['POST'])
-def create_user_post(request):
+@api_view(['POST', 'PUT'])
+def saveOrUpdate_user_post(request, post_id=None):
     """
     Create a new user post.
 
@@ -17,10 +19,23 @@ def create_user_post(request):
     Parameters:
         request (Request): The HTTP request object containing the post data.
 
-    Returns:
-        Response: A JSON response containing the serialized post data if successful, along with a status code 201 (Created).
-                  If the request data is invalid, it returns error messages along with a status code 400 (Bad Request).
+    Returns: Response: A JSON response containing the serialized post data if successful, along with a status code
+    201 (Created). If the request data is invalid, it returns error messages along with a status code 400 (Bad Request).
+    :param request:
+    :param post_id:
     """
+    if post_id is not None:
+        try:
+            post = UserPostModel.objects.select_related('user', 'sub_category', 'location').get(pk=post_id)
+            if request.method == 'PUT':
+                serializer = UserPostSerializer(instance=post, data=request.data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except UserPostModel.DoesNotExist:
+            return Response({"message": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+
     serializer = UserPostSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(user=User.objects.get(id=2))
@@ -82,8 +97,8 @@ def fetch_post(request, post_id=None):
         return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['POST'])
-def create_user_donation(request):
+@api_view(['POST', 'PUT'])
+def saveOrUpdate_user_donation(request, donation_id=None):
     """
     Create a new user donation.
 
@@ -95,7 +110,21 @@ def create_user_donation(request):
     Returns:
         Response: A JSON response containing the serialized donation data if successful, along with a status code 201 (Created).
                   If the request data is invalid, it returns error messages along with a status code 400 (Bad Request).
+                  :param request:
+                  :param donation_id:
     """
+    if donation_id is not None:
+        try:
+            donation = UserDonationModel.objects.select_related('user', 'category', 'location').get(pk=donation_id)
+            if request.method == 'PUT':
+                serializer = UserDonationSerializer(donation, data=request.data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except UserDonationModel.DoesNotExist:
+            return Response({"message": "Donation not found"}, status=status.HTTP_404_NOT_FOUND)
+
     serializer = UserDonationSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(user=User.objects.get(id=2))
@@ -189,3 +218,25 @@ def user_profile(request, user_id):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def all_districts(request):
+    """
+    Retrieve all districts.
+    """
+    if request.method == 'GET':
+        districts = DistrictsModel.objects.all()
+        serializer = DistrictSerializer(districts, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def all_posters(request):
+    """
+    Retrieve all posters.
+    """
+    if request.method == 'GET':
+        posters = Poster.objects.all()
+        serializer = PosterSerializer(posters, many=True)
+        return Response(serializer.data)
