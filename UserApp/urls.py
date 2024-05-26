@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/subcategories/<int:main_category_id>/', views.subcategories_by_main_category,
          name='subcategories-by-main-category'),
     path('api/user/info/', views.get_user_info, name='get_user_info'),
+    path('api/user/posts-donations/', views.user_posts_and_donations, name='user-posts-donations'),
 
 ]

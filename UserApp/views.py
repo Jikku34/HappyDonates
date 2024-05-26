@@ -35,7 +35,7 @@ def register_user(request):
     return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
 
 
-@api_view(['POST', 'PUT','DELETE'])
+@api_view(['POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def saveOrUpdate_user_post(request, post_id=None):
     """
@@ -132,7 +132,7 @@ def fetch_post(request, post_id=None):
         return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['POST', 'PUT','DELETE'])
+@api_view(['POST', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def saveOrUpdate_user_donation(request, donation_id=None):
     """
@@ -294,6 +294,8 @@ def subcategories_by_main_category(request, main_category_id):
     subcategories = SubCategoryModel.objects.filter(main_category_id=main_category)
     serializer = SubCategorySerializer(subcategories, many=True)
     return Response(serializer.data)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_info(request):
@@ -303,3 +305,19 @@ def get_user_info(request):
     user = request.user
     serializer = UserSerializer(user)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_posts_and_donations(request):
+    user = request.user
+    posts = UserPostModel.objects.filter(user=user)
+    donations = UserDonationModel.objects.filter(user=user)
+
+    post_serializer = UserPostSerializer(posts, many=True)
+    donation_serializer = UserDonationSerializer(donations, many=True)
+
+    return Response({
+        'posts': post_serializer.data,
+        'donations': donation_serializer.data
+    })
