@@ -13,5 +13,6 @@ urlpatterns = [
     path('api/profile/<int:user_id>/', views.user_profile, name='user_profile'),
     path('api/districts/', views.all_districts, name='all-districts'),
     path('api/posters/', views.all_posters, name='all-posters'),
+    path('api/subcategories/<int:main_category_id>/',  views.subcategories_by_main_category, name='subcategories-by-main-category'),
 
 ]

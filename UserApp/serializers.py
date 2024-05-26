@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import UserPostModel, UserDonationModel, UserProfileModel
-from AdminApp.models import Poster,DistrictsModel
+from AdminApp.models import Poster, DistrictsModel, MainCategoryModel, SubCategoryModel
+
 
 class UserPostSerializer(serializers.ModelSerializer):
     sub_category_name = serializers.SerializerMethodField()
@@ -49,12 +50,28 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfileModel
         fields = ['user_profile_id', 'profile_image', 'phone', 'user']
 
+
 class DistrictSerializer(serializers.ModelSerializer):
     class Meta:
         model = DistrictsModel
         fields = ['district_id', 'district_name', 'state_id']
 
+
 class PosterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Poster
         fields = ['id', 'title', 'status', 'image', 'date_posted']
+
+
+class SubCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubCategoryModel
+        fields = ['sub_category_id', 'sub_category_name', 'main_category_id']
+
+
+class MainCategorySerializer(serializers.ModelSerializer):
+    subcategories = SubCategorySerializer(many=True, read_only=True, source='subcategories')
+
+    class Meta:
+        model = MainCategoryModel
+        fields = ['main_category_id', 'main_category_name', 'subcategories']

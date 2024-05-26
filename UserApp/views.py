@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import UserPostModel, UserDonationModel, UserProfileModel
 from django.contrib.auth.models import User
-from AdminApp.models import DistrictsModel, Poster
-from .serializers import UserPostSerializer, UserDonationSerializer, UserProfileSerializer, PosterSerializer,DistrictSerializer
+from AdminApp.models import DistrictsModel, Poster,MainCategoryModel,SubCategoryModel
+from .serializers import UserPostSerializer, UserDonationSerializer, UserProfileSerializer, PosterSerializer,DistrictSerializer,SubCategorySerializer,MainCategorySerializer
 
 
 @api_view(['POST', 'PUT'])
@@ -78,6 +78,9 @@ def fetch_post(request, post_id=None):
                         filters &= Q(location__district_name__icontains=value)
                     elif key == 'subcategory':
                         filters &= Q(sub_category__sub_category_name__icontains=value)
+                    elif key == 'main_category':
+                        filters &= Q(sub_category__main_category_id__main_category_name__icontains=value)
+
                     elif key == 'end_date':
                         filters &= Q(create_at__lte=value)
                     else:
@@ -239,3 +242,14 @@ def all_posters(request):
         posters = Poster.objects.all()
         serializer = PosterSerializer(posters, many=True)
         return Response(serializer.data)
+
+@api_view(['GET'])
+def subcategories_by_main_category(request, main_category_id):
+    try:
+        main_category = MainCategoryModel.objects.get(pk=main_category_id)
+    except MainCategoryModel.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    subcategories = SubCategoryModel.objects.filter(main_category_id =main_category)
+    serializer = SubCategorySerializer(subcategories, many=True)
+    return Response(serializer.data)
