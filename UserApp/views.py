@@ -1,14 +1,42 @@
 from django.db.models import Q
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .models import UserPostModel, UserDonationModel, UserProfileModel
 from django.contrib.auth.models import User
-from AdminApp.models import DistrictsModel, Poster,MainCategoryModel,SubCategoryModel
-from .serializers import UserPostSerializer, UserDonationSerializer, UserProfileSerializer, PosterSerializer,DistrictSerializer,SubCategorySerializer,MainCategorySerializer
+from AdminApp.models import DistrictsModel, Poster, MainCategoryModel, SubCategoryModel
+from .serializers import UserPostSerializer, UserDonationSerializer, UserProfileSerializer, PosterSerializer, \
+    DistrictSerializer, SubCategorySerializer, MainCategorySerializer, UserSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
-@api_view(['POST', 'PUT'])
+@api_view(['POST'])
+def register_user(request):
+    """
+    Register a new user.
+    """
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if not username or not email or not password:
+        return Response({"error": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(username=username).exists():
+        return Response({"error": "Username already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(email=email).exists():
+        return Response({"error": "Email already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.create_user(username=username, email=email, password=password)
+    user.save()
+
+    return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST', 'PUT','DELETE'])
+@permission_classes([IsAuthenticated])
 def saveOrUpdate_user_post(request, post_id=None):
     """
     Create a new user post.
@@ -23,6 +51,7 @@ def saveOrUpdate_user_post(request, post_id=None):
     :param request:
     :param post_id:
     """
+    user = request.user
     if post_id is not None:
         try:
             post = UserPostModel.objects.select_related('user', 'sub_category', 'location').get(pk=post_id)
@@ -32,12 +61,15 @@ def saveOrUpdate_user_post(request, post_id=None):
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            elif request.method == 'DELETE':
+                post.delete()
+                return Response({"message": "Post deleted successfully"}, status=status.HTTP_200_OK)
         except UserPostModel.DoesNotExist:
             return Response({"message": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = UserPostSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save(user=User.objects.get(id=2))
+        serializer.save(user=user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -59,6 +91,7 @@ def fetch_post(request, post_id=None):
                   If the requested post is not found, it returns an error message with a status code 404 (Not Found).
                   For any other errors, it returns an error message along with a status code 500 (Internal Server Error).
     """
+
     try:
         if post_id is not None:
             post = UserPostModel.objects.select_related('user', 'sub_category', 'location').get(pk=post_id)
@@ -99,7 +132,8 @@ def fetch_post(request, post_id=None):
         return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@api_view(['POST', 'PUT'])
+@api_view(['POST', 'PUT','DELETE'])
+@permission_classes([IsAuthenticated])
 def saveOrUpdate_user_donation(request, donation_id=None):
     """
     Create a new user donation.
@@ -114,7 +148,9 @@ def saveOrUpdate_user_donation(request, donation_id=None):
                   If the request data is invalid, it returns error messages along with a status code 400 (Bad Request).
                   :param request:
                   :param donation_id:
+
     """
+    user = request.user
     if donation_id is not None:
         try:
             donation = UserDonationModel.objects.select_related('user', 'category', 'location').get(pk=donation_id)
@@ -124,12 +160,15 @@ def saveOrUpdate_user_donation(request, donation_id=None):
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            elif request.method == 'DELETE':
+                donation.delete()
+                return Response({"message": "Donation deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except UserDonationModel.DoesNotExist:
             return Response({"message": "Donation not found"}, status=status.HTTP_404_NOT_FOUND)
 
     serializer = UserDonationSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save(user=User.objects.get(id=2))
+        serializer.save(user=user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -189,6 +228,7 @@ def fetch_donation(request, donation_id=None):
 
 
 @api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
 def user_profile(request, user_id):
     """
     Retrieve or update user profile data.
@@ -243,6 +283,7 @@ def all_posters(request):
         serializer = PosterSerializer(posters, many=True)
         return Response(serializer.data)
 
+
 @api_view(['GET'])
 def subcategories_by_main_category(request, main_category_id):
     try:
@@ -250,6 +291,15 @@ def subcategories_by_main_category(request, main_category_id):
     except MainCategoryModel.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    subcategories = SubCategoryModel.objects.filter(main_category_id =main_category)
+    subcategories = SubCategoryModel.objects.filter(main_category_id=main_category)
     serializer = SubCategorySerializer(subcategories, many=True)
+    return Response(serializer.data)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_info(request):
+    """
+    Endpoint to get authenticated user's information.
+    """
+    user = request.user
+    serializer = UserSerializer(user)
     return Response(serializer.data)
