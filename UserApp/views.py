@@ -54,7 +54,7 @@ def saveOrUpdate_user_post(request, post_id=None):
     user = request.user
     if post_id is not None:
         try:
-            post = UserPostModel.objects.select_related('user', 'sub_category', 'location').get(pk=post_id)
+            post = UserPostModel.objects.select_related('user', 'sub_category', 'location').get(pk=post_id,user=user)
             if request.method == 'PUT':
                 serializer = UserPostSerializer(instance=post, data=request.data, partial=True)
                 if serializer.is_valid():
@@ -112,7 +112,7 @@ def fetch_post(request, post_id=None):
                     elif key == 'subcategory':
                         filters &= Q(sub_category__sub_category_name__icontains=value)
                     elif key == 'main_category':
-                        filters &= Q(sub_category__main_category_id__main_category_name__icontains=value)
+                        filters &= Q(sub_category__main_category_id__main_category_name=value)
 
                     elif key == 'end_date':
                         filters &= Q(create_at__lte=value)
@@ -278,6 +278,7 @@ def all_posters(request):
     """
     Retrieve all posters.
     """
+
     if request.method == 'GET':
         posters = Poster.objects.all()
         serializer = PosterSerializer(posters, many=True)
@@ -286,6 +287,9 @@ def all_posters(request):
 
 @api_view(['GET'])
 def subcategories_by_main_category(request, main_category_id):
+    """
+    Retrieve all subcategories by main category id.
+    """
     try:
         main_category = MainCategoryModel.objects.get(pk=main_category_id)
     except MainCategoryModel.DoesNotExist:
@@ -310,13 +314,14 @@ def get_user_info(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_posts_and_donations(request):
+    """
+    Endpoint to get authenticated user's posts and donations.
+    """
     user = request.user
     posts = UserPostModel.objects.filter(user=user)
     donations = UserDonationModel.objects.filter(user=user)
-
     post_serializer = UserPostSerializer(posts, many=True)
     donation_serializer = UserDonationSerializer(donations, many=True)
-
     return Response({
         'posts': post_serializer.data,
         'donations': donation_serializer.data
