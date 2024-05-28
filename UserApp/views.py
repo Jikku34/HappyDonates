@@ -4,9 +4,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .models import UserPostModel, UserDonationModel, UserProfileModel
 from django.contrib.auth.models import User
-from AdminApp.models import DistrictsModel, Poster, MainCategoryModel, SubCategoryModel
+from AdminApp.models import DistrictsModel, Poster, MainCategoryModel, SubCategoryModel,DonationCategoryModel
 from .serializers import UserPostSerializer, UserDonationSerializer, UserProfileSerializer, PosterSerializer, \
-    DistrictSerializer, SubCategorySerializer, MainCategorySerializer, UserSerializer
+    DistrictSerializer, SubCategorySerializer, MainCategorySerializer, UserSerializer,DonationCategorySerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -326,3 +326,9 @@ def user_posts_and_donations(request):
         'posts': post_serializer.data,
         'donations': donation_serializer.data
     })
+
+@api_view(['GET'])
+def donation_category_list(request):
+    donation_categories = DonationCategoryModel.objects.all()
+    serializer = DonationCategorySerializer(donation_categories, many=True)
+    return Response(serializer.data)

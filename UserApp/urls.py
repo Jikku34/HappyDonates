@@ -25,5 +25,5 @@ urlpatterns = [
          name='subcategories-by-main-category'),
     path('api/user/info/', views.get_user_info, name='get_user_info'),
     path('api/user/posts-donations/', views.user_posts_and_donations, name='user-posts-donations'),
-
+    path('api/donation-categories/', views.donation_category_list, name='donation-category-list'),
 ]

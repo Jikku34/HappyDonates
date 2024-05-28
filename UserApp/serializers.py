@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import UserPostModel, UserDonationModel, UserProfileModel
-from AdminApp.models import Poster, DistrictsModel, MainCategoryModel, SubCategoryModel
+from AdminApp.models import Poster, DistrictsModel, MainCategoryModel, SubCategoryModel,DonationCategoryModel
 from django.contrib.auth.models import User
 
 class UserPostSerializer(serializers.ModelSerializer):
@@ -93,3 +93,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
+
+
+
+class DonationCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DonationCategoryModel
+        fields = ['donation_category_id', 'donation_category_name']
