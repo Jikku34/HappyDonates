@@ -40,6 +40,7 @@ class UserPostModel(models.Model):
     images = models.ImageField(upload_to='images/', null=True)
     contact_number = models.CharField(max_length=100, null=True)
     comments = models.TextField(max_length=300, null=True)
+
     create_at = models.DateTimeField(auto_now_add=True, null=True)
     status = models.CharField(max_length=100, default="Active")
 
@@ -77,6 +78,7 @@ class UserDonationModel(models.Model):
     end_date = models.DateTimeField(null=True)
     location = models.ForeignKey(DistrictsModel, on_delete=models.CASCADE, related_name='donations', null=True)
     address = models.CharField(max_length=500, null=True)
+    donation_file = models.FileField(upload_to='files/',null=True)
     images = models.ImageField(upload_to='images/', null=True)
     contact_number = models.CharField(max_length=100, null=True)
     comments = models.TextField(max_length=500, null=True)
