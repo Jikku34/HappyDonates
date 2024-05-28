@@ -21,17 +21,17 @@ class UserPostSerializer(serializers.ModelSerializer):
     def get_user_name(self, obj):
         return obj.user.username if obj.user else None
 
-    def validate_sub_category(self, value):
-        try:
-            return int(value)
-        except ValueError:
-            raise serializers.ValidationError("Sub category must be an integer.")
-
-    def validate_location(self, value):
-        try:
-            return int(value)
-        except ValueError:
-            raise serializers.ValidationError("Location must be an integer.")
+    # def validate_sub_category(self, value):
+    #     try:
+    #         return int(value)
+    #     except ValueError:
+    #         raise serializers.ValidationError("Sub category must be an integer.")
+    #
+    # def validate_location(self, value):
+    #     try:
+    #         return int(value)
+    #     except ValueError:
+    #         raise serializers.ValidationError("Location must be an integer.")
 
 
 class UserDonationSerializer(serializers.ModelSerializer):
