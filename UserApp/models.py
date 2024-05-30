@@ -79,6 +79,8 @@ class UserDonationModel(models.Model):
     location = models.ForeignKey(DistrictsModel, on_delete=models.CASCADE, related_name='donations', null=True)
     address = models.CharField(max_length=500, null=True)
     donation_file = models.FileField(upload_to='files/',null=True)
+    hospital_name = models.CharField(max_length=500,null=True)
+    hospital_patient_id=models.CharField(max_length=500,null=True)
     images = models.ImageField(upload_to='images/', null=True)
     contact_number = models.CharField(max_length=100, null=True)
     comments = models.TextField(max_length=500, null=True)
