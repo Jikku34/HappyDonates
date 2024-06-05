@@ -22,27 +22,22 @@ def home(request):
     :param request: HTTP request object.
     :return: Rendered admin home page with statistics.
     """
-    # Generate data for user registrations
     user_data = []
     for month in range(1, 13):
         user_count = User.objects.filter(date_joined__month=month).count()
         user_data.append(user_count)
 
-    # Generate data for posts
     post_data = []
     for month in range(1, 13):
         post_count = UserPostModel.objects.filter(create_at__month=month).count()
         post_data.append(post_count)
 
-    # Generate data for donations
     donation_data = []
     for month in range(1, 13):
         donation_count = UserDonationModel.objects.filter(create_at__month=month).count()
         donation_data.append(donation_count)
-    print(UserDonationModel.objects.filter(status="Pending").order_by('end_date').values())
 
     data = {
-
         'user_count': User.objects.filter(is_active=True).count(),
         'post_count': UserPostModel.objects.filter(status="Active").count(),
         'donation_count': UserDonationModel.objects.all().count(),
@@ -52,7 +47,6 @@ def home(request):
         'post_data': post_data,
         'donation_data': donation_data,
     }
-    print(data)
     return render(request, 'admin_home_page.html', data)
 
 
@@ -158,7 +152,7 @@ def admin_post(request):
             Q(address__icontains=search) |
             Q(user__username__icontains=search)
         )
-        print(results)
+
         if start_date and end_date:
             results = results.filter(create_at__range=[
                 start_date, end_date]).order_by('-create_at')
@@ -189,7 +183,6 @@ def admin_category(request):
     :param request: HTTP request object.
     :return: Rendered admin category page with post statistics categorized by subcategories.
     """
-
     data_post = {
         'post_count': UserPostModel.objects.filter(status="Active").count(),
         'post_month_count': UserPostModel.objects.filter(status="Active",
@@ -281,8 +274,6 @@ def admin_donation_request(request):
     }
 
     if request.method == "POST":
-        print(request.POST)
-
         search = request.POST.get("donationSearch", "")
         start_date = request.POST.get("startDate")
         end_date = request.POST.get("endDate")
@@ -290,7 +281,6 @@ def admin_donation_request(request):
         countFetch = request.POST.get("donationCount", 0)
         location = request.POST.get("donationLocation")
         category = request.POST.get("donationCategory")
-        print(category, location)
 
         results = UserDonationModel.objects.all().order_by('create_at')
 
@@ -305,27 +295,21 @@ def admin_donation_request(request):
                 Q(comments__icontains=search) |
                 Q(user__username__icontains=search)
             )
-            # print(f'result of search :{results.values()}')
 
         if start_date and end_date:
             results = results.filter(create_at__range=[start_date, end_date])
-            # print(f'result of date :{results.values()}')
 
         if status:
             results = results.filter(status=status)
-            # print(f'result of status :{results.values()}')
 
         if location:
             results = results.filter(location__district_id=int(location))
-            # print(f'result of location :{results.values()}')
 
         if category:
             results = results.filter(category__donation_category_id=int(category))
-            # print(f'result of category :{results.values()}')
 
         if countFetch.isdigit() and int(countFetch) > 0:
             results = results[:int(countFetch)]
-            # print(f'result of count :{results.values()}')
 
         data_donation_request['donations'] = results
 
@@ -334,13 +318,16 @@ def admin_donation_request(request):
 
 @login_required
 def state_district_view(request):
-    # Annotate districts with the total number of posts and donations
-    districts = DistrictsModel.objects.annotate(
+    """
+    Renders the state and district view with annotated data for posts and donations.
 
+    :param request: HTTP request object.
+    :return: Rendered state and district view with annotated data.
+    """
+    districts = DistrictsModel.objects.annotate(
         total_donations=Count('donations')
     )
 
-    # Aggregate the total counts for each state by summing the counts from its districts
     states = StateModel.objects.annotate(
         total_posts=Count('districts__posts'),
         total_donations=Count('districts__donations')
@@ -352,6 +339,13 @@ def state_district_view(request):
 
 @login_required
 def user_profile(request, user_name):
+    """
+    Renders the user profile page with user posts and donations.
+
+    :param request: HTTP request object.
+    :param user_name: Username of the user whose profile is to be viewed.
+    :return: Rendered user profile page with user posts and donations.
+    """
     user = get_object_or_404(User, username=user_name)
     user_posts = UserPostModel.objects.filter(user=user)
     user_donations = UserDonationModel.objects.filter(user=user)
@@ -367,6 +361,14 @@ def user_profile(request, user_name):
 
 @csrf_exempt
 def update_user_status(request, action, user_id):
+    """
+    Updates the status of a user (activate, deactivate, delete).
+
+    :param request: HTTP request object.
+    :param action: Action to be performed (inactive, activate, delete).
+    :param user_id: ID of the user whose status is to be updated.
+    :return: JsonResponse indicating success or failure of the action.
+    """
     if request.method == 'POST':
         try:
             user = User.objects.get(id=user_id)
@@ -389,13 +391,15 @@ def update_user_status(request, action, user_id):
 
 
 def post_detail_view(request, post_id):
-    # Get the post object
+    """
+    Renders the post detail view with post and user data.
+
+    :param request: HTTP request object.
+    :param post_id: ID of the post to be viewed.
+    :return: Rendered post detail view with post and user data.
+    """
     post = get_object_or_404(UserPostModel, pk=post_id)
-
-    # Get the user who created the post
     user = post.user
-
-    # Get all posts for the user (if you need to display a list of other posts by the user)
     user_posts = UserPostModel.objects.filter(user=user)
 
     context = {
@@ -408,6 +412,13 @@ def post_detail_view(request, post_id):
 
 
 def donation_detail_view(request, donation_id):
+    """
+    Renders the donation detail view with donation and user data.
+
+    :param request: HTTP request object.
+    :param donation_id: ID of the donation to be viewed.
+    :return: Rendered donation detail view with donation and user data.
+    """
     donation = get_object_or_404(UserDonationModel, donation_id=donation_id)
     user = donation.user
     other_donations = UserDonationModel.objects.filter(user=user).exclude(donation_id=donation_id)
@@ -421,6 +432,14 @@ def donation_detail_view(request, donation_id):
 
 
 def update_donation_status(request, action, donation_id):
+    """
+    Updates the status of a donation (approve, reject, inactive, active, delete).
+
+    :param request: HTTP request object.
+    :param action: Action to be performed on the donation.
+    :param donation_id: ID of the donation whose status is to be updated.
+    :return: JsonResponse indicating success or failure of the action.
+    """
     if request.method == 'POST':
         donation = get_object_or_404(UserDonationModel, donation_id=donation_id)
 
@@ -438,4 +457,33 @@ def update_donation_status(request, action, donation_id):
 
         donation.save()
         return JsonResponse({'success': True, 'status': donation.status})
+    return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+
+
+def update_post_status(request, action, post_id):
+    """
+    Updates the status of a post (approve, reject, inactive, active, delete).
+
+    :param request: HTTP request object.
+    :param action: Action to be performed on the post.
+    :param post_id: ID of the post whose status is to be updated.
+    :return: JsonResponse indicating success or failure of the action.
+    """
+    if request.method == 'POST':
+        post = get_object_or_404(UserPostModel, post_id=post_id)
+
+        if action == 'approve':
+            post.status = 'Active'
+        elif action == 'reject':
+            post.status = 'Reject'
+        elif action == 'inactive':
+            post.status = 'Inactive'
+        elif action == 'active':
+            post.status = 'Active'
+        elif action == 'delete':
+            post.delete()
+            return JsonResponse({'success': True, 'deleted': True})
+
+        post.save()
+        return JsonResponse({'success': True, 'status': post.status})
     return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)

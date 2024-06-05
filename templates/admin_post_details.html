@@ -479,6 +479,25 @@
                                             {{ post.status }}
                                         </div>
                                     </div>
+                                    <hr>
+                                                    <div class="row mt-3">
+                    <div class="col-sm-12 text-center">
+                        {% if post.status == 'Active' %}
+                            <button type="button" class="btn btn-warning" onclick="showConfirmationModal('{{ post.id }}', 'inactive', '{{ post.user.username }}')">Inactive</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'delete', '{{ post.user.username }}')">Delete</button>
+                        {% elif post.status == 'Pending' %}
+                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.id }}', 'approve', '{{ post.user.username }}')">Approve</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'reject', '{{ post.user.username }}')">Reject</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'delete', '{{ post.user.username }}')">Delete</button>
+                        {% elif post.status == 'Reject' %}
+                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.id }}', 'approve', '{{ post.user.username }}')">Approve</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'delete', '{{ post.user.username }}')">Delete</button>
+                        {% elif post.status == 'Inactive' %}
+                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.id }}', 'active', '{{ post.user.username }}')">Active</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'delete', '{{ post.user.username }}')">Delete</button>
+                        {% endif %}
+                    </div>
+                </div>
                                 </div>
                             </div>
                         </div>
@@ -557,63 +576,64 @@
         };
     </script>
     <script type="text/javascript">
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
-            return cookieValue;
         }
-        const csrftoken = getCookie('csrftoken');
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
 
-        let currentAction = '';
-        let currentUserId = '';
+    let currentAction = '';
+    let currentPostId = '';
 
-        function showConfirmationModal(userId, action, username) {
-            currentAction = action;
-            currentUserId = userId;
-            document.getElementById('actionName').textContent = action;
-            document.getElementById('userName').textContent = username;
-            var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'), {});
-            confirmationModal.show();
-        }
+    function showConfirmationModal(postId, action, username) {
+        currentAction = action;
+        currentPostId = postId;
+        document.getElementById('actionName').textContent = action;
+        document.getElementById('userName').textContent = username;
+        var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'), {});
+        confirmationModal.show();
+    }
 
-        document.getElementById('confirmActionBtn').addEventListener('click', function() {
-            updateUserStatus(currentUserId, currentAction);
+    document.getElementById('confirmActionBtn').addEventListener('click', function() {
+        updatePostStatus(currentPostId, currentAction);
+    });
+
+    function updatePostStatus(postId, action) {
+        fetch(`/update_post_status/${action}/${postId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                post_id: postId
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.deleted) {
+                    window.location.href = "{% url 'admin_post' %}";
+                } else {
+                    location.reload();
+                }
+            } else {
+                alert(data.error);
+            }
         });
+    }
+</script>
 
-        function updateUserStatus(userId, action) {
-            fetch(`/user/${action}/${userId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken,
-                    },
-                    body: JSON.stringify({
-                        user_id: userId
-                    }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        if (action === 'delete') {
-                            window.location.href = "{% url 'admin_user' %}";
-                        } else {
-                            location.reload();
-                        }
-                    } else {
-                        alert(data.error);
-                    }
-                });
-        }
-    </script>
 </body>
 
 </html>

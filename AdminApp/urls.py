@@ -17,5 +17,6 @@ urlpatterns = [
     path('post/<int:post_id>/', views.post_detail_view, name='admin_post_detail'),
     path('donation/<int:donation_id>/', views.donation_detail_view, name='admin_donation_detail'),
     path('update_donation_status/<str:action>/<int:donation_id>/', views.update_donation_status, name='update_donation_status'),
+    path('update_post_status/<str:action>/<int:post_id>/', views.update_post_status, name='update_post_status'),
 
 ]
