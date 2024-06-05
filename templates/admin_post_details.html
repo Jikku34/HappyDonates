@@ -483,18 +483,18 @@
                                                     <div class="row mt-3">
                     <div class="col-sm-12 text-center">
                         {% if post.status == 'Active' %}
-                            <button type="button" class="btn btn-warning" onclick="showConfirmationModal('{{ post.id }}', 'inactive', '{{ post.user.username }}')">Inactive</button>
-                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'delete', '{{ post.user.username }}')">Delete</button>
+                            <button type="button" class="btn btn-warning" onclick="showConfirmationModal('{{ post.post_id }}', 'inactive', '{{ post.user.username }}')">Inactive</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.post_id}}', 'delete', '{{ post.user.username }}')">Delete</button>
                         {% elif post.status == 'Pending' %}
-                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.id }}', 'approve', '{{ post.user.username }}')">Approve</button>
-                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'reject', '{{ post.user.username }}')">Reject</button>
-                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'delete', '{{ post.user.username }}')">Delete</button>
+                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.post_id }}', 'approve', '{{ post.user.username }}')">Approve</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.post_id }}', 'reject', '{{ post.user.username }}')">Reject</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.post_id }}', 'delete', '{{ post.user.username }}')">Delete</button>
                         {% elif post.status == 'Reject' %}
-                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.id }}', 'approve', '{{ post.user.username }}')">Approve</button>
-                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'delete', '{{ post.user.username }}')">Delete</button>
+                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.post_id }}', 'approve', '{{ post.user.username }}')">Approve</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.post_id}}', 'delete', '{{ post.user.username }}')">Delete</button>
                         {% elif post.status == 'Inactive' %}
-                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.id }}', 'active', '{{ post.user.username }}')">Active</button>
-                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.id }}', 'delete', '{{ post.user.username }}')">Delete</button>
+                            <button type="button" class="btn btn-success" onclick="showConfirmationModal('{{ post.post_id }}', 'active', '{{ post.user.username }}')">Active</button>
+                            <button type="button" class="btn btn-danger" onclick="showConfirmationModal('{{ post.post_id }}', 'delete', '{{ post.user.username }}')">Delete</button>
                         {% endif %}
                     </div>
                 </div>
