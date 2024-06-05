@@ -1,7 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    {% load static %}
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -211,12 +213,9 @@
         }
 
         .card-profile img {
-            border-radius: 50%;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .card-profile img:hover {
-            transform: scale(1.1);
+            border-radius: 15px;
+            width: 100%;
+            height: auto;
         }
 
         /* User Details Card */
@@ -240,48 +239,51 @@
             background-color: #f8f9fa;
         }
 
-        /* Donation Table Card */
-        .card-donation-table {
+        /* Unified Table Card */
+        .card-unified-table {
             background-color: #fff;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
-        .card-donation-table:hover {
+        .card-unified-table:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
-        .card-donation-table table tbody tr {
+        .card-unified-table table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-collapse: collapse;
+        }
+
+        .card-unified-table table th,
+        .card-unified-table table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .card-unified-table table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .card-unified-table table tbody + tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .card-unified-table table tbody tr {
             transition: background-color 0.3s ease-in-out;
         }
 
-        .card-donation-table table tbody tr:hover {
+        .card-unified-table table tbody tr:hover {
             background-color: #f8f9fa;
         }
 
-        /* Post Table Card */
-        .card-post-table {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-
-        .card-post-table:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-post-table table tbody tr {
-            transition: background-color 0.3s ease-in-out;
-        }
-
-        .card-post-table table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-                .no-data {
+        .no-data {
             background-color: #f8d7da;
             color: #721c24;
             padding: 10px;
@@ -361,7 +363,7 @@
                     <!-- Breadcrumb -->
                     <nav aria-label="breadcrumb" class="main-breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}s">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Home</a></li>
                             <li class="breadcrumb-item"><a href="{% url 'admin_user' %}">User</a></li>
                             <li class="breadcrumb-item active" aria-current="page">User Profile</li>
                         </ol>
@@ -372,20 +374,7 @@
                         <div class="col-md-4 mb-3">
                             <div class="card card-profile">
                                 <div class="card-body">
-                                    <div class="d-flex flex-column align-items-center text-center">
-                                        <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}https://bootdey.com/img/Content/avatar/avatar7.png{% endif %}" alt="Admin" class="rounded-circle" width="150">
-                                        <div class="mt-3">
-    <h4>{{ user.username }}</h4>
-    <p class="text-secondary mb-1">{{ user.email }}</p>
-    <p class="text-muted font-size-sm">{{ user.status }}</p>
-    {% if not user.is_active %}
-<button class="btn btn-success" onclick="showConfirmationModal('{{ user.id }}', 'activate', '{{ user.username }}')">Activate</button>
-    {% else %}
-<button class="btn btn-warning" onclick="showConfirmationModal('{{ user.id }}', 'inactive', '{{ user.username }}')">Inactive</button>
-    {% endif %}
-<button class="btn btn-danger" onclick="showConfirmationModal('{{ user.id }}', 'delete', '{{ user.username }}')">Delete</button>
-</div>
-                                    </div>
+                                    <img src="{% if post.images %}{{ post.images.url }}{% else %}{% static 'images/noimage.png' %}{% endif %}" alt="Post Image" class="rounded">
                                 </div>
                             </div>
                         </div>
@@ -394,55 +383,100 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Username</h6>
+                                            <h6 class="mb-0">Title</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            {{ user.username }}
+                                            {{ post.title }}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                                                        <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">username</h6>
+                                        </div>
+                                        <div class="col-sm-9 text-secondary">
+                                            {{ post.user.username }}
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Email</h6>
+                                            <h6 class="mb-0">Description</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            {{ user.email }}
+                                            {{ post.description }}
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Joined at</h6>
+                                            <h6 class="mb-0">Quantity</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            {{ user.date_joined }}
+                                            {{ post.quantity }}
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Last Logged in</h6>
+                                            <h6 class="mb-0">Pick-up Time</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            {{ user.last_login }}
+                                            {{ post.pick_up_time }}
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Total Post</h6>
+                                            <h6 class="mb-0">End Time</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            {{ user.posts.count }}
+                                            {{ post.end_on }}
                                         </div>
                                     </div>
                                     <hr>
                                     <div class="row">
                                         <div class="col-sm-3">
-                                            <h6 class="mb-0">Total Donations</h6>
+                                            <h6 class="mb-0">Location</h6>
                                         </div>
                                         <div class="col-sm-9 text-secondary">
-                                            {{ user.donations.count }}
+                                            {{ post.location }}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Address</h6>
+                                        </div>
+                                        <div class="col-sm-9 text-secondary">
+                                            {{ post.address }}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Contact Number</h6>
+                                        </div>
+                                        <div class="col-sm-9 text-secondary">
+                                            {{ post.contact_number }}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Comments</h6>
+                                        </div>
+                                        <div class="col-sm-9 text-secondary">
+                                            {{ post.comments }}
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Status</h6>
+                                        </div>
+                                        <div class="col-sm-9 text-secondary">
+                                            {{ post.status }}
                                         </div>
                                     </div>
                                 </div>
@@ -451,77 +485,38 @@
                     </div>
 
                     <div class="row gutters-sm">
-                        <div class="col-sm-6 mb-3">
-                            <div class="card card-donation-table h-100">
+                        <div class="col-12 mb-3">
+                            <div class="card card-unified-table h-100">
                                 <div class="card-body">
-                                    <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>Donations</h6>
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Title</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% if user_donations %}
-                                            {% for donation in user_donations %}
-                                            <tr>
-                                                <td>{{ donation.title }}</td>
-                                                <td>{{ donation.end_date }}</td>
-                                                <td>{{ donation.status }}</td>
-                                                <<td>
-                    <a href="{% url 'admin_donation_detail' donation.donation_id %}" class="btn btn-info btn-sm">View More</a>
-                </td>
-                                            </tr>
-                                            {% endfor %}
-                                                    {% else %}
-            <tr>
-                <td colspan="4" class="text-center">
-                    <div class="no-data">No donation found</div>
-                </td>
-            </tr>
-            {% endif %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <div class="card card-post-table h-100">
-                                <div class="card-body">
-                                    <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>Posts</h6>
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Title</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% if user_posts %}
-                                            {% for post in user_posts %}
-                                            <tr>
-                                                <td>{{ post.title }}</td>
-                                                <td>{{ post.pick_up_time }}</td>
-                                                <td>{{ post.status }}</td>
-                                                  <td>
-                    <a href="{% url 'admin_post_detail' post.post_id %}" class="btn btn-info btn-sm">View More</a> <!-- Link to user detail page -->
-                </td>
-                                            </tr>
-                                            {% endfor %}
-                                                    {% else %}
-            <tr>
-                <td colspan="4" class="text-center">
-                    <div class="no-data">No posts found</div>
-                </td>
-            </tr>
-            {% endif %}
-                                        </tbody>
-                                    </table>
+                                    <h6 class="d-flex align-items-center mb-3"><i class="material-icons text-info mr-2">assignment</i>Posts of {{user.username}}</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Title</th>
+                                                    <th scope="col">Date</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if user_posts %}
+                                                {% for post in user_posts %}
+                                                <tr>
+                                                    <td>{{ post.title }}</td>
+                                                    <td>{{ post.pick_up_time }}</td>
+                                                    <td>{{ post.status }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                                {% else %}
+                                                <tr>
+                                                    <td colspan="3" class="text-center">
+                                                        <div class="no-data">No posts found</div>
+                                                    </td>
+                                                </tr>
+                                                {% endif %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -532,23 +527,23 @@
         </div>
     </div>
     <!-- Confirmation Modal -->
-<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="confirmationModalLabel">Confirm Action</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to <span id="actionName">perform this action</span> on <span id="userName"></span>?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="confirmActionBtn">Confirm</button>
-      </div>
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to <span id="actionName">perform this action</span> on <span id="userName"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmActionBtn">Confirm</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
     <!-- /#page-content-wrapper -->
 
@@ -561,65 +556,64 @@
             el.classList.toggle("toggled");
         };
     </script>
-<script type="text/javascript">
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+    <script type="text/javascript">
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
                 }
             }
+            return cookieValue;
         }
-        return cookieValue;
-    }
-    const csrftoken = getCookie('csrftoken');
+        const csrftoken = getCookie('csrftoken');
 
-    let currentAction = '';
-    let currentUserId = '';
+        let currentAction = '';
+        let currentUserId = '';
 
-    function showConfirmationModal(userId, action, username) {
-        currentAction = action;
-        currentUserId = userId;
-        document.getElementById('actionName').textContent = action;
-        document.getElementById('userName').textContent = username;
-        var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'), {});
-        confirmationModal.show();
-    }
+        function showConfirmationModal(userId, action, username) {
+            currentAction = action;
+            currentUserId = userId;
+            document.getElementById('actionName').textContent = action;
+            document.getElementById('userName').textContent = username;
+            var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'), {});
+            confirmationModal.show();
+        }
 
-    document.getElementById('confirmActionBtn').addEventListener('click', function() {
-        updateUserStatus(currentUserId, currentAction);
-    });
-
-    function updateUserStatus(userId, action) {
-        fetch(`/user/${action}/${userId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body: JSON.stringify({ user_id: userId }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                if (action === 'delete') {
-                    window.location.href = "{% url 'admin_user' %}";
-                } else {
-                    location.reload();
-                }
-            } else {
-                alert(data.error);
-            }
+        document.getElementById('confirmActionBtn').addEventListener('click', function() {
+            updateUserStatus(currentUserId, currentAction);
         });
-    }
-</script>
 
-
-
+        function updateUserStatus(userId, action) {
+            fetch(`/user/${action}/${userId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({
+                        user_id: userId
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (action === 'delete') {
+                            window.location.href = "{% url 'admin_user' %}";
+                        } else {
+                            location.reload();
+                        }
+                    } else {
+                        alert(data.error);
+                    }
+                });
+        }
+    </script>
 </body>
 
 </html>

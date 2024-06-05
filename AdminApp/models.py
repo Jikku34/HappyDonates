@@ -69,8 +69,11 @@ class StateModel(models.Model):
     Meta:
         db_table (str): The name of the database table for the model.
     """
-    state_id = models.IntegerField(primary_key=True)
+    state_id = models.AutoField(primary_key=True)
     state_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return  self.state_name
 
     class Meta:
         db_table = "state_data_table"
@@ -88,12 +91,14 @@ class DistrictsModel(models.Model):
     Meta:
         db_table (str): The name of the database table for the model.
     """
-    district_id = models.IntegerField(primary_key=True)
+    district_id = models.AutoField(primary_key=True)
     district_name = models.CharField(max_length=100)
-    state_id = models.ForeignKey(StateModel, on_delete=models.CASCADE)
+    state_id = models.ForeignKey(StateModel, on_delete=models.CASCADE,related_name='districts')
 
     class Meta:
         db_table = "districts_data_table"
+    def __str__(self):
+        return self.district_name
 
 
 class Poster(models.Model):

@@ -7,147 +7,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="styles.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <title>Bootstap 5 Responsive Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Bootstrap 5 Responsive Admin Dashboard</title>
     <style>
         :root {
-  --main-bg-color: #9d0069;
-  --main-text-color: #9d0088;
-  --second-text-color: #bbbdc5;
-  --second-bg-color: #edc1ef;
-}
+            --main-bg-color: #9d0069;
+            --main-text-color: #ffffff;
+            --second-text-color: #bbbdc5;
+            --second-bg-color: #edc1ef;
+            --sidebar-bg-color: linear-gradient(135deg, #ff99cc, #ffccff);
+            --sidebar-shadow-color: rgba(0, 0, 0, 0.2);
+        }
 
-.primary-text {
-  color: var(--main-text-color);
-}
+        body {
+            background-color: white;
+        }
 
-.second-text {
-  color: var(--second-text-color);
-}
+        .primary-text {
+            color: var(--main-text-color);
+        }
 
-.primary-bg {
-  background-color: var(--main-bg-color);
-}
+        .second-text {
+            color: var(--second-text-color);
+        }
 
-.secondary-bg {
-  background-color: var(--second-bg-color);
-}
+        .primary-bg {
+            background-color: var(--main-bg-color);
+        }
 
-.rounded-full {
-  border-radius: 100%;
-}
+        .secondary-bg {
+            background-color: var(--second-bg-color);
+        }
 
-#wrapper {
-  overflow-x: hidden;
-  background-image: linear-gradient(
-    to right,
-    #abd0f3,
-    rgb(214, 132, 203),
-    #dccbf7,
-    #f1d4f8,
-    #fadde2
-  );
-}
+        .rounded-full {
+            border-radius: 100%;
+        }
 
-#sidebar-wrapper {
-  min-height: 100vh;
-  margin-left: -15rem;
-  -webkit-transition: margin 0.25s ease-out;
-  -moz-transition: margin 0.25s ease-out;
-  -o-transition: margin 0.25s ease-out;
-  transition: margin 0.25s ease-out;
-}
+        #wrapper {
+            overflow-x: hidden;
+            background-color: white;
+            position: relative;
+        }
 
-#sidebar-wrapper .sidebar-heading {
-  padding: 0.875rem 1.25rem;
-  font-size: 1.2rem;
-}
+        #sidebar-wrapper {
+            min-height: 100vh;
+            width: 250px;
+            margin-left: -250px;
+            background: var(--sidebar-bg-color);
+            box-shadow: 2px 0 10px var(--sidebar-shadow-color);
+            color: var(--main-text-color);
+            transition: margin 0.25s ease-out;
+            position: fixed;
+        }
 
-#sidebar-wrapper .list-group {
-  width: 15rem;
-}
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: 0;
+        }
 
-#page-content-wrapper {
-  min-width: 100vw;
-}
+        #sidebar-wrapper .sidebar-heading {
+            padding: 0.875rem 1.25rem;
+            font-size: 1.2rem;
+            color: var(--main-bg-color);
+        }
 
-#wrapper.toggled #sidebar-wrapper {
-  margin-left: 0;
-}
+        #sidebar-wrapper .list-group {
+            width: 100%;
+        }
 
-#menu-toggle {
-  cursor: pointer;
-}
+        #page-content-wrapper {
+            width: 100%;
+            min-width: 100vw;
+            transition: margin 0.25s ease-out;
+        }
 
-.list-group-item {
-  border: none;
-  padding: 20px 30px;
-}
+        #wrapper.toggled #page-content-wrapper {
+            margin-left: 250px;
+        }
 
-.list-group-item.active {
-  background-color: transparent;
-  color: var(--main-text-color);
-  font-weight: bold;
-  border: none;
-}
+        #menu-toggle {
+            cursor: pointer;
+            color: var(--main-bg-color);
+        }
 
-@media (min-width: 768px) {
-  #sidebar-wrapper {
-    margin-left: 0;
-  }
+        .list-group-item {
+            border: none;
+            padding: 20px 30px;
+            background-color: transparent;
+            color: var(--main-bg-color);
+        }
 
-  #page-content-wrapper {
-    min-width: 0;
-    width: 100%;
-  }
+        .list-group-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--main-bg-color);
+            font-weight: bold;
+            border: none;
+        }
 
-  #wrapper.toggled #sidebar-wrapper {
-    margin-left: -15rem;
-  }
-}
+        .list-group-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
+        .card-counter {
+            box-shadow: 2px 2px 10px #DADADA;
+            margin: 5px;
+            padding: 20px 10px;
+            background-color: #fff;
+            height: 100px;
+            border-radius: 5px;
+            transition: .3s linear all;
+            position: relative;
+        }
+
+        .card-counter:hover {
+            box-shadow: 4px 4px 20px #DADADA;
+            transition: .3s linear all;
+        }
+
+        .card-counter.primary {
+            background-color: var(--main-bg-color);
+            color: #FFF;
+        }
+
+        .card-counter.success {
+            background-color: #66bb6a;
+            color: #FFF;
+        }
+
+        .card-counter.info {
+            background-color: #26c6da;
+            color: #FFF;
+        }
+
+        .card-counter i {
+            font-size: 5em;
+            opacity: 0.2;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .card-counter .count-numbers {
+            font-size: 32px;
+        }
+
+        .card-counter .count-name {
+            font-style: italic;
+            text-transform: capitalize;
+            opacity: 0.5;
+            font-size: 18px;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .table thead th {
+            background-color: var(--main-bg-color);
+            color: #fff;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 40vh;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .no-data {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
-        <div class="bg-white" id="sidebar-wrapper">
+        <div id="sidebar-wrapper">
             <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
-
-            HappyDonates</div>
+                HappyDonates
+            </div>
             <div class="list-group list-group-flush my-3">
-                <a href="{% url 'admin_home' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><span class="material-icons me-2">
-                    dashboard
-                    </span></i>Dashboard</a>
-                <a href="{% url 'admin_user' %}" class="list-group-item list-group-item-action bg-transparent second-text active "><span class="material-icons me-2">
-                    person
-                    </span>
-                    Users</a>
-                <a href="{% url 'admin_post' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><span class="material-icons me-2">
-                    favorite
-                    </span>Post</a>
-                <a  href="{% url 'admin_donation_request' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-chart-line me-2"></i>Donations</a>
-                <a href="{% url 'admin_category' %}"  class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <span class="material-icons me-2">
-                        category
-                        </span>
-                Categories</a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                        <span class="material-icons me-2">
-                            library_books
-                            </span>
-                        Add Ads</a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><span class="material-icons me-2">
-                    admin_panel_settings
-                    </span>Settings</a>
-
-                <a href="#" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold"><span class="material-icons me-2">
-                    logout
-                    </span></i>Logout</a>
+                <a href="{% url 'admin_home' %}" class="list-group-item list-group-item-action active">
+                    <span class="material-icons me-2">dashboard</span>Dashboard</a>
+                <a href="{% url 'admin_user' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">person</span>Users</a>
+                <a href="{% url 'admin_post' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">favorite</span>Post</a>
+                <a href="{% url 'admin_donation_request' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">volunteer_activism</span>Donations</a>
+                <a href="{% url 'admin_category' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">category</span>Categories</a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">library_books</span>Add Ads</a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">admin_panel_settings</span>Settings</a>
+                <a href="#" class="list-group-item list-group-item-action text-danger">
+                    <span class="material-icons me-2">logout</span>Logout</a>
             </div>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -182,62 +253,39 @@
                     </ul>
                 </div>
             </nav>
-        <!-- main content -->
+
+            <!-- main content -->
             <div class="container-fluid px-4">
                 <div class="row g-4 my-2">
                     <div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-                            <div>
-                                <h3 class="fs-4">{{user_count}}</h3>
-                                <p class="fs-6">Active Users</p>
-                            </div>
-
-
-                            <span class="material-icons fs-1  primary-text border rounded-full secondary-bg p-3">
-                                people
-                            </span>
+                        <div class="card-counter primary">
+                            <i class="material-icons">people</i>
+                            <span class="count-numbers">{{user_count}}</span>
+                            <span class="count-name">Active Users</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-                            <div>
-                                <h3 class="fs-4">{{user_today_count}}</h3>
-                                <p class="fs-6">Users Today</p>
-                            </div>
-                            <span class="material-icons fs-1  primary-text border rounded-full secondary-bg p-3">
-
-                                    equalizer
-
-                                </span>
-
-
+                        <div class="card-counter success">
+                            <i class="material-icons">equalizer</i>
+                            <span class="count-numbers">{{user_today_count}}</span>
+                            <span class="count-name">Users Today</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-                            <div>
-                                <h3 class="fs-4">{{user_month_count}}</h3>
-                                <p class="fs-6">User Month</p>
-                            </div>
-                            <span class="material-icons fs-1  primary-text border rounded-full secondary-bg p-3">
-
-                                    leaderboard
-
-                                </span>
+                        <div class="card-counter info">
+                            <i class="material-icons">leaderboard</i>
+                            <span class="count-numbers">{{user_month_count}}</span>
+                            <span class="count-name">Users This Month</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-                            <div>
-                                <h3 class="fs-4">{{user_year_count}}</h3>
-                                <p class="fs-6">User Year</p>
-                            </div>
-                            <span class="material-icons fs-1  primary-text border rounded-full secondary-bg p-3">
-                                area_chart
-                                </span>
+                        <div class="card-counter primary">
+                            <i class="material-icons">area_chart</i>
+                            <span class="count-numbers">{{user_year_count}}</span>
+                            <span class="count-name">Users This Year</span>
                         </div>
                     </div>
                 </div>
@@ -246,49 +294,77 @@
                     <h3 class="fs-4 mb-3">Users</h3>
                     <form class="row g-3" method="POST">
                         {% csrf_token %}
-                         <div class="col-auto">
-                            <input type="date" name="startDate" class="form-select col-md-4">
+                        <div class="col-auto">
+                            <input type="text" name="startDate" class="form-select flatpickr" placeholder="Start Date">
                         </div>
                         <div class="col-auto">
-                            <input type="date"  name="endDate" class="form-select col-md-4">
+                            <input type="text" name="endDate" class="form-select flatpickr" placeholder="End Date">
                         </div>
                         <div class="col-auto">
-                          <label for="userSearch" class="visually-hidden">Password</label>
-                          <input type="text" class="form-control"  name="userSearch" id="userSearch" placeholder="Search user.....">
+                            <label for="userSearch" class="visually-hidden">Search User</label>
+                            <input type="text" class="form-control" name="userSearch" id="userSearch"
+                                placeholder="Search user...">
                         </div>
                         <div class="col-auto">
-                          <button type="submit" class="btn btn-primary mb-3">Search</button>
+                            <label for="userStatus" class="visually-hidden">User Status</label>
+                            <select class="form-select" name="userStatus" id="userStatus">
+                                <option value="">All Users</option>
+                                <option value="active">Active Users</option>
+                                <option value="inactive">Inactive Users</option>
+                            </select>
                         </div>
-                      </form>
+                        <div class="col-auto">
+                            <label for="userCount" class="visually-hidden">User Count</label>
+                            <input type="number" class="form-control" name="userCount" id="userCount"
+                                placeholder="No. of users to fetch" min="1">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary mb-3">Filter</button>
+                        </div>
+                    </form>
 
-
-                    <div class="col">
-                        <table class="table bg-white rounded shadow-sm  table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="50">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Phone number</th>
-                                    <th scope="col">No of post</th>
-                                    <th scope="col">Create at</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                 {% for data in user_data %}
-                                <tr>
-                                    <th scope="row">{{forloop.counter}}</th>
-                                    <td>{{data.username}}</td>
-                                    <td>{{data.user_phone_number}}</td>
-                                    <td>{{data.post_count}}</td>
-                                    <td>{{data.create_at}}</td>
-                                </tr>
-
-                            {% endfor %}
-
-                            </tbody>
-                        </table>
-                    </div>
+                    <div class="col table-responsive">
+    <table class="table bg-white rounded shadow-sm table-hover">
+        <thead>
+            <tr>
+                <th scope="col" width="50">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Phone number</th>
+                <th scope="col">No of posts</th>
+                <th scope="col">Created at</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th> <!-- New column for actions -->
+            </tr>
+        </thead>
+        <tbody>
+            {% if user_data %}
+            {% for data in user_data %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ data.username }}</td>
+                <td>{{ data.email }}</td>
+                <td>{{ data.post_count }}</td>
+                <td>{{ data.date_joined }}</td>
+                {% if data.is_active %}
+                <td>Active</td>
+                {% else %}
+                <td>Inactive</td>
+                {% endif %}
+                <td>
+                    <a href="{% url 'user_detail' data.username %}" class="btn btn-info btn-sm">View More</a> <!-- Link to user detail page -->
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center">
+                    <div class="no-data">No users found</div>
+                </td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
                 </div>
 
             </div>
@@ -298,6 +374,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         var el = document.getElementById("wrapper");
         var toggleButton = document.getElementById("menu-toggle");
@@ -305,6 +382,12 @@
         toggleButton.onclick = function () {
             el.classList.toggle("toggled");
         };
+
+        // Initialize Flatpickr
+        flatpickr(".flatpickr", {
+            enableTime: false,
+            dateFormat: "Y-m-d"
+        });
     </script>
 </body>
 

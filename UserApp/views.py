@@ -332,3 +332,4 @@ def donation_category_list(request):
     donation_categories = DonationCategoryModel.objects.all()
     serializer = DonationCategorySerializer(donation_categories, many=True)
     return Response(serializer.data)
+

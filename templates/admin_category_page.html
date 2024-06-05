@@ -7,148 +7,259 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-    <link rel="stylesheet" href="styles.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <title>Bootstap 5 Responsive Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Bootstrap 5 Responsive Admin Dashboard</title>
     <style>
         :root {
-  --main-bg-color: #9d0069;
-  --main-text-color: #9d0088;
-  --second-text-color: #bbbdc5;
-  --second-bg-color: #edc1ef;
-}
+            --main-bg-color: #9d0069;
+            --main-text-color: #ffffff;
+            --second-text-color: #bbbdc5;
+            --second-bg-color: #edc1ef;
+            --sidebar-bg-color: linear-gradient(135deg, #ff99cc, #ffccff);
+            --sidebar-shadow-color: rgba(0, 0, 0, 0.2);
+        }
 
-.primary-text {
-  color: var(--main-text-color);
-}
+        body {
+            background-color: white;
+        }
 
-.second-text {
-  color: var(--second-text-color);
-}
+        .primary-text {
+            color: var(--main-text-color);
+        }
 
-.primary-bg {
-  background-color: var(--main-bg-color);
-}
+        .second-text {
+            color: var(--second-text-color);
+        }
 
-.secondary-bg {
-  background-color: var(--second-bg-color);
-}
+        .primary-bg {
+            background-color: var(--main-bg-color);
+        }
 
-.rounded-full {
-  border-radius: 100%;
-}
+        .secondary-bg {
+            background-color: var(--second-bg-color);
+        }
 
-#wrapper {
-  overflow-x: hidden;
-  background-image: linear-gradient(
-    to right,
-    #abd0f3,
-    rgb(214, 132, 203),
-    #dccbf7,
-    #f1d4f8,
-    #fadde2
-  );
-}
+        .rounded-full {
+            border-radius: 100%;
+        }
 
-#sidebar-wrapper {
-  min-height: 100vh;
-  margin-left: -15rem;
-  -webkit-transition: margin 0.25s ease-out;
-  -moz-transition: margin 0.25s ease-out;
-  -o-transition: margin 0.25s ease-out;
-  transition: margin 0.25s ease-out;
-}
+        #wrapper {
+            overflow-x: hidden;
+            background-color: white;
+            position: relative;
+        }
 
-#sidebar-wrapper .sidebar-heading {
-  padding: 0.875rem 1.25rem;
-  font-size: 1.2rem;
-}
+        #sidebar-wrapper {
+            min-height: 100vh;
+            width: 250px;
+            margin-left: -250px;
+            background: var(--sidebar-bg-color);
+            box-shadow: 2px 0 10px var(--sidebar-shadow-color);
+            color: var(--main-text-color);
+            transition: margin 0.25s ease-out;
+            position: fixed;
+        }
 
-#sidebar-wrapper .list-group {
-  width: 15rem;
-}
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: 0;
+        }
 
-#page-content-wrapper {
-  min-width: 100vw;
-}
+        #sidebar-wrapper .sidebar-heading {
+            padding: 0.875rem 1.25rem;
+            font-size: 1.2rem;
+            color: var(--main-bg-color);
+        }
 
-#wrapper.toggled #sidebar-wrapper {
-  margin-left: 0;
-}
+        #sidebar-wrapper .list-group {
+            width: 100%;
+        }
 
-#menu-toggle {
-  cursor: pointer;
-}
+        #page-content-wrapper {
+            width: 100%;
+            min-width: 100vw;
+            transition: margin 0.25s ease-out;
+        }
 
-.list-group-item {
-  border: none;
-  padding: 20px 30px;
-}
+        #wrapper.toggled #page-content-wrapper {
+            margin-left: 250px;
+        }
 
-.list-group-item.active {
-  background-color: transparent;
-  color: var(--main-text-color);
-  font-weight: bold;
-  border: none;
-}
+        #menu-toggle {
+            cursor: pointer;
+            color: var(--main-bg-color);
+        }
 
-@media (min-width: 768px) {
-  #sidebar-wrapper {
-    margin-left: 0;
-  }
+        .list-group-item {
+            border: none;
+            padding: 20px 30px;
+            background-color: transparent;
+            color: var(--main-bg-color);
+        }
 
-  #page-content-wrapper {
-    min-width: 0;
-    width: 100%;
-  }
+        .list-group-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--main-bg-color);
+            font-weight: bold;
+            border: none;
+        }
 
-  #wrapper.toggled #sidebar-wrapper {
-    margin-left: -15rem;
-  }
-}
+        .list-group-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
+        .card-counter {
+            box-shadow: 2px 2px 10px #DADADA;
+            margin: 5px;
+            padding: 20px 10px;
+            background-color: #fff;
+            height: 100px;
+            border-radius: 5px;
+            transition: .3s linear all;
+            position: relative;
+        }
+
+        .card-counter:hover {
+            box-shadow: 4px 4px 20px #DADADA;
+            transition: .3s linear all;
+        }
+
+        .card-counter.primary {
+            background-color: var(--main-bg-color);
+            color: #FFF;
+        }
+
+        .card-counter.success {
+            background-color: #66bb6a;
+            color: #FFF;
+        }
+
+        .card-counter.info {
+            background-color: #26c6da;
+            color: #FFF;
+        }
+
+        .card-counter i {
+            font-size: 5em;
+            opacity: 0.2;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .card-counter .count-numbers {
+            font-size: 32px;
+        }
+
+        .card-counter .count-name {
+            font-style: italic;
+            text-transform: capitalize;
+            opacity: 0.5;
+            font-size: 18px;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .table thead th {
+            background-color: var(--main-bg-color);
+            color: #fff;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 40vh;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .no-data {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .category-table {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        .category-table.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-heading {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-category-link {
+            color: var(--main-bg-color);
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .add-category-link:hover {
+            color: var(--second-bg-color);
+        }
+
+        .add-category-btn {
+            color: var(--main-bg-color);
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .add-category-btn:hover {
+            color: var(--second-bg-color);
+        }
     </style>
 </head>
 
 <body>
     <div class="d-flex" id="wrapper">
         <!-- Sidebar -->
-        <div class="bg-white" id="sidebar-wrapper">
+        <div id="sidebar-wrapper">
             <div class="sidebar-heading text-center py-4 primary-text fs-4 fw-bold text-uppercase border-bottom">
-
-            HappyDonates</div>
+                HappyDonates
+            </div>
             <div class="list-group list-group-flush my-3">
-                <a href="{% url 'admin_home' %}" class="list-group-item list-group-item-action bg-transparent second-text active"><span class="material-icons me-2">
-                    dashboard
-                    </span>Dashboard</a>
-                <a href="{% url 'admin_home' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><span class="material-icons me-2">
-                    person
-                    </span>
-                    Users</a>
-                <a href="{% url 'admin_post' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><span class="material-icons me-2">
-                    favorite
-                    </span>Post</a>
-                <a href="{% url 'admin_donation_request' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <i class="fas fa-chart-line me-2"></i>Donations</a>
-
-                <a href="{% url 'admin_category' %}" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                    <span class="material-icons me-2">
-                        category
-                        </span>
-                Categories</a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold">
-                        <span class="material-icons me-2">
-                            library_books
-                            </span>
-                        Add Ads</a>
-                <a href="#" class="list-group-item list-group-item-action bg-transparent second-text fw-bold"><span class="material-icons me-2">
-                    admin_panel_settings
-                    </span>Settings</a>
-
-                <a href="#" class="list-group-item list-group-item-action bg-transparent text-danger fw-bold"><span class="material-icons me-2">
-                    logout
-                    </span>Logout</a>
+                <a href="{% url 'admin_home' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">dashboard</span>Dashboard</a>
+                <a href="{% url 'admin_home' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">person</span>Users</a>
+                <a href="{% url 'admin_post' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">favorite</span>Post</a>
+                <a href="{% url 'admin_donation_request' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">volunteer_activism</span>Donations</a>
+                <a href="{% url 'admin_category' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">category</span>Categories</a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">library_books</span>Add Ads</a>
+                <a href="#" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">admin_panel_settings</span>Settings</a>
+                <a href="#" class="list-group-item list-group-item-action text-danger">
+                    <span class="material-icons me-2">logout</span>Logout</a>
             </div>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -185,70 +296,49 @@
             </nav>
 
             <div class="container-fluid px-4">
-                <div class="row g-3 my-2">
+                <div class="row g-4 my-2">
                     <div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-                            <div>
-                                <h3 class="fs-3">{{post_count}}</h3>
-                                <p class="fs-6">Active Post</p>
-                            </div>
-
-
-                            <span class="material-icons fs-1  primary-text border rounded-full secondary-bg p-3">
-                                people
-                            </span>
+                        <div class="card-counter primary">
+                            <i class="material-icons">people</i>
+                            <span class="count-numbers">{{post_count}}</span>
+                            <span class="count-name">Active Post</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-                            <div>
-                                <h3 class="fs-3">{{post_today_count}}</h3>
-                                <p class="fs-6">Post Today</p>
-                            </div>
-                            <span class="material-icons fs-1  primary-text border rounded-full secondary-bg p-3">
-                                    favorite
-                                </span>
-
-
+                        <div class="card-counter success">
+                            <i class="material-icons">favorite</i>
+                            <span class="count-numbers">{{post_today_count}}</span>
+                            <span class="count-name">Post Today</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-                            <div>
-                                <h3 class="fs-3">{{post_month_count}}</h3>
-                                <p class="fs-6">Month Post</p>
-                            </div>
-                            <span class="material-icons fs-1  primary-text border rounded-full secondary-bg p-3">
-                                volunteer_activism
-                                </span>
+                        <div class="card-counter info">
+                            <i class="material-icons">volunteer_activism</i>
+                            <span class="count-numbers">{{post_month_count}}</span>
+                            <span class="count-name">Month Post</span>
                         </div>
                     </div>
 
                     <div class="col-md-3">
-                        <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
-                            <div>
-                                <h3 class="fs-3">{{post_year_count}}</h3>
-                                <p class="fs-6">Year Post</p>
-                            </div>
-                            <i class="fas fa-chart-line fs-1 primary-text border rounded-full secondary-bg p-3"></i>
+                        <div class="card-counter primary">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="count-numbers">{{post_year_count}}</span>
+                            <span class="count-name">Year Post</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="row my-5">
-                    <p>
-                        <a class="btn btn-primary m-1" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Food category</a>
-                        <button class="btn btn-primary m-1" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Non-Food category</button>
-                        <button class="btn btn-primary m-1" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">All category   </button>
-                        <a href="{% url 'admin_add_category' %}" class="btn btn-primary m-1">Add new Category</a>
-                      </p>
-                      <div class="row">
-                        <div class="col">
-                          <div class="collapse multi-collapse" id="multiCollapseExample1">
-                            <div class="card card-body">
-                                <table class="table bg-white rounded shadow-sm  table-hover">
+                <div class="row my-5 category-tables">
+                    <div class="col-lg-6 col-md-12 mb-4 category-table active">
+                        <div class="category-heading">
+                            Food Category
+                            <button class="add-category-btn" onclick="location.href='{% url 'admin_add_category' %}'">+</button>
+                        </div>
+                        <div class="card card-body">
+                            <div class="table-responsive">
+                                <table class="table bg-white rounded shadow-sm table-hover">
                                     <thead>
                                         <tr>
                                             <th scope="col" width="50">#</th>
@@ -258,27 +348,33 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {% for data in subCategoryFood %}
-
+                                        {% for data in subCategoryFood %}
                                         <tr>
-
                                             <th scope="row">{{forloop.counter}}</th>
                                             <td>{{data.sub_category_name}}</td>
-                                            <td>{{data.post_count}}</td>
-                                            <td><a class="btn btn-danger btn-sm" href="/admin_remove_subcategory/{{data.sub_category_id}}" role="button">Remove</a></td>
+                                            <td>{{data.count}}</td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#modal"
+                                                    data-subcategory-id="{{data.sub_category_id}}"
+                                                    data-url="/admin_remove_subcategory/{{data.sub_category_id}}"
+                                                    role="button">Remove</button>
+                                            </td>
                                         </tr>
-
-                                    {% endfor %}
-
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
-                          </div>
                         </div>
-                          <div class="col">
-                          <div class="collapse multi-collapse" id="multiCollapseExample2">
-                            <div class="card card-body">
-                                <table class="table bg-white rounded shadow-sm  table-hover">
+                    </div>
+                    <div class="col-lg-6 col-md-12 mb-4 category-table active">
+                        <div class="category-heading">
+                            Non-Food Category
+                            <button class="add-category-btn" onclick="location.href='{% url 'admin_add_category' %}'">+</button>
+                        </div>
+                        <div class="card card-body">
+                            <div class="table-responsive">
+                                <table class="table bg-white rounded shadow-sm table-hover">
                                     <thead>
                                         <tr>
                                             <th scope="col" width="50">#</th>
@@ -288,33 +384,50 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {% for data in subCategoryNonFood %}
-
+                                        {% for data in subCategoryNonFood %}
                                         <tr>
-
                                             <th scope="row">{{forloop.counter}}</th>
                                             <td>{{data.sub_category_name}}</td>
-                                            <td>{{data.post_count}}</td>
-                                            <td><a class="btn btn-danger btn-sm" href="/admin_remove_subcategory/{{data.sub_category_id}}" role="button">Remove</a></td>
+                                            <td>{{data.count}}</td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#modal"
+                                                    data-subcategory-id="{{data.sub_category_id}}"
+                                                    data-url="/admin_remove_subcategory/{{data.sub_category_id}}"
+                                                    role="button">Remove</button>
+                                            </td>
                                         </tr>
-
-                                    {% endfor %}
-
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
-                          </div>
                         </div>
-                      <div>
-
-
-
+                    </div>
                 </div>
 
             </div>
         </div>
     </div>
     <!-- /#page-content-wrapper -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage">Are you sure you want to remove this category?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="#" id="modalActionButton" class="btn btn-danger">Remove</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
@@ -325,6 +438,35 @@
         toggleButton.onclick = function () {
             el.classList.toggle("toggled");
         };
+
+        // Modal script to set the message and action URL dynamically
+        var modal = document.getElementById('modal');
+        var modalLabel = document.getElementById('modalLabel');
+        var modalMessage = document.getElementById('modalMessage');
+        var modalActionButton = document.getElementById('modalActionButton');
+
+        document.querySelectorAll('button[data-bs-toggle="modal"]').forEach(button => {
+            button.addEventListener('click', function () {
+                var subCategoryId = this.getAttribute('data-subcategory-id');
+                var url = this.getAttribute('data-url');
+
+                if (subCategoryId == 4 || subCategoryId == 5) {
+                    modalLabel.innerText = 'Cannot Remove';
+                    modalMessage.innerText = 'This sub-category cannot be removed.';
+                    modalActionButton.style.display = 'none';
+                } else {
+                    modalLabel.innerText = 'Confirm Remove';
+                    modalMessage.innerText = 'Are you sure you want to remove this category?';
+                    modalActionButton.style.display = 'inline-block';
+                    modalActionButton.setAttribute('href', url);
+                }
+            });
+        });
+
+        // Reset the modal action button href when modal is hidden
+        modal.addEventListener('hidden.bs.modal', function () {
+            modalActionButton.setAttribute('href', '#');
+        });
     </script>
 </body>
 
