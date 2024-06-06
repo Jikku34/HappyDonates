@@ -282,7 +282,7 @@ def all_posters(request):
     """
 
     if request.method == 'GET':
-        posters = Poster.objects.all()
+        posters = Poster.objects.filter(status=True)
         serializer = PosterSerializer(posters, many=True)
         return Response(serializer.data)
 

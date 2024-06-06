@@ -5,6 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+
 class UserPostModel(models.Model):
     """
     Model representing posts made by users.
@@ -49,6 +50,7 @@ class UserPostModel(models.Model):
     class Meta:
         db_table = 'user_post_table'
 
+
 @receiver(post_save, sender=UserPostModel)
 def update_status(sender, instance, **kwargs):
     if instance.end_on and instance.end_on < timezone.now() and instance.status == 'Active':
@@ -86,10 +88,10 @@ class UserDonationModel(models.Model):
     end_date = models.DateTimeField(null=True)
     location = models.ForeignKey(DistrictsModel, on_delete=models.CASCADE, related_name='donations', null=True)
     address = models.CharField(max_length=500, null=True)
-    donation_file = models.FileField(upload_to='files/',null=True,default=None)
-    hospital_name = models.CharField(max_length=500,null=True,default=None)
-    donation_user_name = models.CharField(max_length=500,null=True)
-    hospital_patient_id=models.CharField(max_length=500,null=True)
+    donation_file = models.FileField(upload_to='files/', null=True, default=None)
+    hospital_name = models.CharField(max_length=500, null=True, default=None)
+    donation_user_name = models.CharField(max_length=500, null=True)
+    hospital_patient_id = models.CharField(max_length=500, null=True)
     images = models.ImageField(upload_to='images/', null=True)
     contact_number = models.CharField(max_length=100, null=True)
     comments = models.TextField(max_length=500, null=True)
@@ -120,4 +122,3 @@ class UserProfileModel(models.Model):
 
     class Meta:
         db_table = "user_profile_table"
-
