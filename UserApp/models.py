@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
 from AdminApp.models import SubCategoryModel, DonationCategoryModel, DistrictsModel
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 
 class UserPostModel(models.Model):
     """
@@ -46,6 +48,12 @@ class UserPostModel(models.Model):
 
     class Meta:
         db_table = 'user_post_table'
+
+@receiver(post_save, sender=UserPostModel)
+def update_status(sender, instance, **kwargs):
+    if instance.end_on and instance.end_on < timezone.now() and instance.status == 'Active':
+        instance.status = 'Inactive'
+        instance.save()
 
 
 class UserDonationModel(models.Model):
