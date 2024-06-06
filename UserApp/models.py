@@ -86,7 +86,7 @@ class UserDonationModel(models.Model):
     contact_number = models.CharField(max_length=100, null=True)
     comments = models.TextField(max_length=500, null=True)
     create_at = models.DateTimeField(auto_now_add=True, null=True)
-     = models.CharField(max_length=100, default="Pending")
+    status = models.CharField(max_length=100, default="Pending")
 
     class Meta:
         db_table = 'user_donation_table'
