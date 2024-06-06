@@ -121,6 +121,7 @@ def fetch_post(request, post_id=None):
 
             posts = UserPostModel.objects.select_related('user', 'sub_category', 'location').filter(
                 filters) if filters else UserPostModel.objects.select_related('user', 'sub_category', 'location').all()
+            posts = posts.filter(status="Active")
 
             serialized_posts = UserPostSerializer(posts, many=True).data
 
@@ -216,6 +217,7 @@ def fetch_donation(request, donation_id=None):
 
             donations = UserDonationModel.objects.select_related('user', 'category', 'location').filter(
                 filters) if filters else UserDonationModel.objects.select_related('user', 'category', 'location').all()
+            donations = donations.filter(status="Active")
 
             serialized_donations = UserDonationSerializer(donations, many=True).data
 
