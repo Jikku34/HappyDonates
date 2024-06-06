@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db.models import Count, Q, Subquery, OuterRef, Sum, F
 from django.shortcuts import render, get_object_or_404
@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def home(request):
     """
     Renders the admin home page with statistics and graph data from the models.
@@ -49,7 +49,6 @@ def home(request):
     }
     return render(request, 'admin_home_page.html', data)
 
-
 def admin_login(request):
     """
     Handles the admin login process.
@@ -63,12 +62,17 @@ def admin_login(request):
 
         user = authenticate(username=admin_username, password=admin_password)
         if user is not None:
-            login(request, user)
-            return redirect('/')
+            if user.is_superuser:
+                login(request, user)
+                return redirect('/admin_home')
+            else:
+                return render(request, 'admin_login.html', {'error': 'You do not have admin privileges.'})
+        else:
+            return render(request, 'admin_login.html', {'error': 'Invalid username or password.'})
     return render(request, 'admin_login.html')
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def admin_user(request):
     """
     Renders the admin user page with user statistics and search functionality.
@@ -116,7 +120,7 @@ def admin_user(request):
     return render(request, "admin_user_page.html", data_user)
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def admin_post(request):
     """
     Renders the admin post page with post statistics, search, and filtering functionality.
@@ -175,7 +179,7 @@ def admin_post(request):
     return render(request, "admin_post_page.html", data_post)
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def admin_category(request):
     """
     Renders the admin category page with post statistics categorized by subcategories.
@@ -200,7 +204,7 @@ def admin_category(request):
     return render(request, "admin_category_page.html", data_post)
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def admin_add_category(request):
     """
     Adds a new subcategory to the main category.
@@ -225,7 +229,7 @@ def admin_add_category(request):
     return render(request, 'admin_add_subcategory.html')
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def admin_remove_subcategory(request, id):
     """
     Removes a subcategory.
@@ -250,7 +254,7 @@ def admin_remove_subcategory(request, id):
     return redirect('/admin_subcategory')
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def admin_donation_request(request):
     """
     Renders the admin donation request page with donation statistics and filtered donations.
@@ -316,7 +320,7 @@ def admin_donation_request(request):
     return render(request, 'admin_donation_request.html', {'donation_request': data_donation_request})
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def state_district_view(request):
     """
     Renders the state and district view with annotated data for posts and donations.
@@ -337,7 +341,7 @@ def state_district_view(request):
     return render(request, 'admin_state_district.html', context)
 
 
-@login_required
+@login_required(login_url='/admin_login')
 def user_profile(request, user_name):
     """
     Renders the user profile page with user posts and donations.
@@ -359,7 +363,7 @@ def user_profile(request, user_name):
     return render(request, 'admin_user_profile.html', context)
 
 
-@csrf_exempt
+@login_required(login_url='/admin_login')
 def update_user_status(request, action, user_id):
     """
     Updates the status of a user (activate, deactivate, delete).
@@ -389,7 +393,7 @@ def update_user_status(request, action, user_id):
             return JsonResponse({'success': False, 'error': 'User not found'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
-
+@login_required(login_url='/admin_login')
 def post_detail_view(request, post_id):
     """
     Renders the post detail view with post and user data.
@@ -410,7 +414,7 @@ def post_detail_view(request, post_id):
 
     return render(request, 'admin_post_details.html', context)
 
-
+@login_required(login_url='/admin_login')
 def donation_detail_view(request, donation_id):
     """
     Renders the donation detail view with donation and user data.
@@ -533,7 +537,7 @@ def delete_district(request, district_id):
     except DistrictsModel.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'District not found'})
 
-
+@login_required(login_url='/admin_login')
 def poster_list(request):
     posters = Poster.objects.all()
     context = {
@@ -541,6 +545,7 @@ def poster_list(request):
         'poster_count': posters.count()
     }
     return render(request, 'admin_poster_list.html', context)
+
 
 @csrf_exempt
 def add_poster(request):
@@ -551,6 +556,7 @@ def add_poster(request):
             poster = Poster.objects.create(title=title, image=image)
             return JsonResponse({'success': True, 'poster_id': poster.id})
     return JsonResponse({'success': False})
+
 
 @csrf_exempt
 def change_status(request, poster_id):
@@ -563,6 +569,7 @@ def change_status(request, poster_id):
         return JsonResponse({'success': True})
     return JsonResponse({'success': False})
 
+
 @csrf_exempt
 def delete_poster(request, poster_id):
     poster = get_object_or_404(Poster, id=poster_id)
@@ -570,3 +577,10 @@ def delete_poster(request, poster_id):
         poster.delete()
         return JsonResponse({'success': True})
     return JsonResponse({'success': False})
+
+def admin_logout(request):
+    try:
+        logout(request)
+        return redirect('admin_login')
+    except:
+        return redirect('admin_login')
