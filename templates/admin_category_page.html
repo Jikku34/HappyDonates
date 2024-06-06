@@ -246,7 +246,7 @@
             <div class="list-group list-group-flush my-3">
                 <a href="{% url 'admin_home' %}" class="list-group-item list-group-item-action">
                     <span class="material-icons me-2">dashboard</span>Dashboard</a>
-                <a href="{% url 'admin_home' %}" class="list-group-item list-group-item-action">
+                <a href="{% url 'admin_user' %}" class="list-group-item list-group-item-action">
                     <span class="material-icons me-2">person</span>Users</a>
                 <a href="{% url 'admin_post' %}" class="list-group-item list-group-item-action">
                     <span class="material-icons me-2">favorite</span>Post</a>
@@ -254,12 +254,11 @@
                     <span class="material-icons me-2">volunteer_activism</span>Donations</a>
                 <a href="{% url 'admin_category' %}" class="list-group-item list-group-item-action">
                     <span class="material-icons me-2">category</span>Categories</a>
-                <a href="#" class="list-group-item list-group-item-action">
+                <a href="{% url 'admin_location' %}" class="list-group-item list-group-item-action">
+                    <span class="material-icons me-2">location_on</span>Locations</a>
+                <a href="{% url 'poster_list' %}" class="list-group-item list-group-item-action">
                     <span class="material-icons me-2">library_books</span>Add Ads</a>
-                <a href="#" class="list-group-item list-group-item-action">
-                    <span class="material-icons me-2">admin_panel_settings</span>Settings</a>
-                <a href="#" class="list-group-item list-group-item-action text-danger">
-                    <span class="material-icons me-2">logout</span>Logout</a>
+
             </div>
         </div>
         <!-- /#sidebar-wrapper -->

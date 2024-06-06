@@ -18,5 +18,14 @@ urlpatterns = [
     path('donation/<int:donation_id>/', views.donation_detail_view, name='admin_donation_detail'),
     path('update_donation_status/<str:action>/<int:donation_id>/', views.update_donation_status, name='update_donation_status'),
     path('update_post_status/<str:action>/<int:post_id>/', views.update_post_status, name='update_post_status'),
+    path('add_state', views.add_state, name='add_state'),
+    path('add_district', views.add_district, name='add_district'),
+    path('delete_state/<int:state_id>/', views.delete_state, name='delete_state'),
+    path('delete_district/<int:district_id>/', views.delete_district, name='delete_district'),
+    path('admin_poster_list', views.poster_list, name='poster_list'),
+    path('admin_poster_add/', views.add_poster, name='add_poster'),
+    path('admin_change_poster_status/<int:poster_id>/', views.change_status, name='poster_change_status'),
+    path('admin_poster_delete/<int:poster_id>/', views.delete_poster, name='delete_poster'),
+
 
 ]

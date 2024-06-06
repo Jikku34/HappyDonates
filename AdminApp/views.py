@@ -487,3 +487,86 @@ def update_post_status(request, action, post_id):
         post.save()
         return JsonResponse({'success': True, 'status': post.status})
     return JsonResponse({'success': False, 'error': 'Invalid request'}, status=400)
+
+
+def add_state(request):
+    if request.method == 'POST':
+        state_name = request.POST.get('state_name')
+        if state_name:
+            state = StateModel()
+            state.state_name = state_name
+            state.save()
+            return JsonResponse({'success': True, 'state_id': state.state_id, 'state_name': state.state_name})
+        return JsonResponse({'success': False, 'error': 'Invalid data'})
+
+
+def add_district(request):
+    if request.method == 'POST':
+        district_name = request.POST.get('district_name')
+        state_id = request.POST.get('state_id')
+        if district_name and state_id:
+            state = StateModel.objects.get(pk=state_id)
+            district = DistrictsModel()
+            district.district_name = district_name
+            district.state_id = state
+            district.save()
+            return JsonResponse(
+                {'success': True, 'district_id': district.district_id, 'district_name': district.district_name,
+                 'state_name': state.state_name})
+        return JsonResponse({'success': False, 'error': 'Invalid data'})
+
+
+def delete_state(request, state_id):
+    try:
+        state = StateModel.objects.get(pk=state_id)
+        state.delete()
+        return JsonResponse({'success': True})
+    except StateModel.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'State not found'})
+
+
+def delete_district(request, district_id):
+    try:
+        district = DistrictsModel.objects.get(pk=district_id)
+        district.delete()
+        return JsonResponse({'success': True})
+    except DistrictsModel.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'District not found'})
+
+
+def poster_list(request):
+    posters = Poster.objects.all()
+    context = {
+        'posters': posters,
+        'poster_count': posters.count()
+    }
+    return render(request, 'admin_poster_list.html', context)
+
+@csrf_exempt
+def add_poster(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        image = request.FILES.get('image')
+        if title and image:
+            poster = Poster.objects.create(title=title, image=image)
+            return JsonResponse({'success': True, 'poster_id': poster.id})
+    return JsonResponse({'success': False})
+
+@csrf_exempt
+def change_status(request, poster_id):
+    poster = get_object_or_404(Poster, id=poster_id)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        status = data.get('status')
+        poster.status = status == 'True'
+        poster.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
+
+@csrf_exempt
+def delete_poster(request, poster_id):
+    poster = get_object_or_404(Poster, id=poster_id)
+    if request.method == 'POST':
+        poster.delete()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
